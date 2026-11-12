@@ -1,0 +1,103 @@
+schema: '2.0'
+stages:
+  ingest:
+    cmd: python src/ingest.py
+    deps:
+    - path: src/ingest.py
+      hash: md5
+      md5: 345368b38c3c9a275563abfe8f712fdc
+      size: 608
+    params:
+      params.yaml:
+        ingest:
+          url: 
+            https://archive.ics.uci.edu/static/public/228/sms+spam+collection.zip
+    outs:
+    - path: data/raw/sms.csv
+      hash: md5
+      md5: 73ffa709b34dd35f0f03c6f70556c251
+      size: 486376
+  validate:
+    cmd: python src/validate.py
+    deps:
+    - path: data/raw/sms.csv
+      hash: md5
+      md5: 73ffa709b34dd35f0f03c6f70556c251
+      size: 486376
+    - path: src/validate.py
+      hash: md5
+      md5: 1cf6053b0d53be3a73ce4e90a4e30a68
+      size: 932
+    outs:
+    - path: reports/validation.json
+      hash: md5
+      md5: a73d0c67eba9a4cc509c9b042a1aa081
+      size: 148
+  preprocess:
+    cmd: python src/preprocess.py
+    deps:
+    - path: data/raw/sms.csv
+      hash: md5
+      md5: 73ffa709b34dd35f0f03c6f70556c251
+      size: 486376
+    - path: reports/validation.json
+      hash: md5
+      md5: a73d0c67eba9a4cc509c9b042a1aa081
+      size: 148
+    - path: src/preprocess.py
+      hash: md5
+      md5: 3aafcc80e6201d81dc3aa4427467f80b
+      size: 928
+    params:
+      params.yaml:
+        seed: 42
+        split:
+          test_size: 0.2
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: b3d7ca22800931979670ee92bf7783e4.dir
+      size: 853149
+      nfiles: 2
+  train:
+    cmd: python src/train.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: b3d7ca22800931979670ee92bf7783e4.dir
+      size: 853149
+      nfiles: 2
+    - path: src/train.py
+      hash: md5
+      md5: 463d9992d1b5bfff5415439595340e63
+      size: 3546
+    params:
+      params.yaml:
+        mlflow:
+          experiment: spamshield
+          registered_model: spamshield-classifier
+          main_model: naive_bayes
+        models:
+          logreg:
+            C: 1.0
+            max_iter: 1000
+          naive_bayes:
+            alpha: 0.1
+          random_forest:
+            n_estimators: 200
+            max_depth:
+        seed: 42
+        tfidf:
+          max_features: 5000
+          ngram_range:
+          - 1
+          - 2
+    outs:
+    - path: models/model.joblib
+      hash: md5
+      md5: 8825ba4df37b75baef98bc24bdea287d
+      size: 346433
+    - path: reports/metrics.json
+      hash: md5
+      md5: f5c1c19008eeb45f02e62a9a5d1caf9b
+      size: 738

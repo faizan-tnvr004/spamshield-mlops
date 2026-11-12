@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+/data/raw/
+/data/processed/
+/models/
+/mlruns/
+/mlartifacts/
+.env
+reports/*.png
+mlflow.db
+SpamShield_Project_Proposal.pdf

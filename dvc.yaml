@@ -1,0 +1,21 @@
+stages:
+  ingest:
+    cmd: python src/ingest.py
+    deps: [src/ingest.py]
+    params: [ingest]
+    outs: [data/raw/sms.csv]
+  validate:
+    cmd: python src/validate.py
+    deps: [src/validate.py, data/raw/sms.csv]
+    metrics: [reports/validation.json]
+  preprocess:
+    cmd: python src/preprocess.py
+    deps: [src/preprocess.py, data/raw/sms.csv, reports/validation.json]
+    params: [seed, split]
+    outs: [data/processed]
+  train:
+    cmd: python src/train.py
+    deps: [src/train.py, data/processed]
+    params: [seed, tfidf, models, mlflow]
+    outs: [models/model.joblib]
+    metrics: [reports/metrics.json]

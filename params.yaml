@@ -1,0 +1,16 @@
+ingest:
+  url: https://archive.ics.uci.edu/static/public/228/sms+spam+collection.zip
+seed: 42
+split:
+  test_size: 0.2
+tfidf:
+  max_features: 5000
+  ngram_range: [1, 2]
+models:
+  logreg: {C: 1.0, max_iter: 1000}
+  naive_bayes: {alpha: 0.1}
+  random_forest: {n_estimators: 200, max_depth: null}
+mlflow:
+  experiment: spamshield
+  registered_model: spamshield-classifier
+  main_model: naive_bayes

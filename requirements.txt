@@ -1,0 +1,7 @@
+dvc
+mlflow
+scikit-learn
+pandas
+pyyaml
+joblib
+requests

@@ -1,0 +1,8 @@
+{
+  "schema": true,
+  "no_nulls": true,
+  "labels_valid": true,
+  "text_length_range": true,
+  "min_rows": true,
+  "spam_ratio_range": true
+}

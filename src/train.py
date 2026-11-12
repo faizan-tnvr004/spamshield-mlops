@@ -61,8 +61,10 @@ def main():
     mv = client.create_model_version(name, src, run_id)
     try:
         client.transition_model_version_stage(mp["registered_model"], mv.version, "Staging")
-    except Exception:  # newer MLflow: stages deprecated -> use alias
-        client.set_registered_model_alias(mp["registered_model"], "staging", mv.version)
+    except Exception:  # stages deprecated in newer MLflow; alias is set below
+        pass
+    client.set_registered_model_alias(name, "staging", mv.version)  # DagsHub UI shows aliases, not stages
+    client.set_model_version_tag(name, mv.version, "stage", "Staging")
     print(f"registered {best} as {mp['registered_model']} v{mv.version} -> Staging")
 
 if __name__ == "__main__":

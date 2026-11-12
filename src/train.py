@@ -49,8 +49,16 @@ def main():
     json.dump({k: {m: v for m, v in r.items() if m not in ("pipe",)} for k, r in results.items()} | {"selected": best},
               open("reports/metrics.json", "w"), indent=2)
     # Register best-F1 model and move to Staging
-    mv = mlflow.register_model(f"runs:/{results[best]['run_id']}/model", mp["registered_model"])
     client = MlflowClient()
+    name = mp["registered_model"]
+    try:
+        client.create_registered_model(name)
+    except Exception:
+        pass  # already exists
+    # DagsHub lacks MLflow-3 logged-model lookup, so register from the run's artifact URI directly.
+    run_id = results[best]["run_id"]
+    src = client.get_run(run_id).info.artifact_uri + "/model"
+    mv = client.create_model_version(name, src, run_id)
     try:
         client.transition_model_version_stage(mp["registered_model"], mv.version, "Staging")
     except Exception:  # newer MLflow: stages deprecated -> use alias

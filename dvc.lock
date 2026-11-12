@@ -60,7 +60,7 @@ stages:
       size: 853149
       nfiles: 2
   train:
-    cmd: python src/train.py
+    cmd: python -X utf8 src/train.py
     deps:
     - path: data/processed
       hash: md5
@@ -69,8 +69,8 @@ stages:
       nfiles: 2
     - path: src/train.py
       hash: md5
-      md5: 463d9992d1b5bfff5415439595340e63
-      size: 3546
+      md5: 719ca4579c0559ac3cf10a52bbbd5b33
+      size: 3914
     params:
       params.yaml:
         mlflow:
@@ -95,9 +95,9 @@ stages:
     outs:
     - path: models/model.joblib
       hash: md5
-      md5: 8825ba4df37b75baef98bc24bdea287d
+      md5: 4d42e63e40ac6645b54e0aec1d88a998
       size: 346433
     - path: reports/metrics.json
       hash: md5
-      md5: f5c1c19008eeb45f02e62a9a5d1caf9b
+      md5: 6860b95abd1c6f23e532d7af3bc4b8b1
       size: 738

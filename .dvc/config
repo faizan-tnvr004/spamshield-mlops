@@ -1,0 +1,4 @@
+[core]
+    remote = origin
+['remote "origin"']
+    url = https://dagshub.com/faizan-tnvr004/spamshield-mlops.dvc
